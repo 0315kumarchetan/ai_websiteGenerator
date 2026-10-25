@@ -4,7 +4,6 @@ import com.ai.websiteGenerator.tools.WebsiteGeneratorTool;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.messages.AssistantMessage;
 import org.springframework.ai.chat.messages.Message;
-import org.springframework.ai.chat.messages.SystemMessage;
 import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.stereotype.Service;
 
@@ -48,26 +47,20 @@ public class WebsiteGeneratorService {
 
     public String generate(String message) {
 
-//        //User role
-//        history.add(new UserMessage(message));
-//
-//        //System + conversation
-//        String response = chatClient.prompt()
-//                .system(SYSTEM_PROMPT)
-//                .messages(history)
-//                .tools(websiteGeneratorTool)
-//                .call()
-//                .content();
-//
-//        //Assistance
-//        history.add(new AssistantMessage(response));
-//        return response;
+        //User role
+        history.add(new UserMessage(message));
 
-        return chatClient.prompt()
+        //System + conversation
+        String response = chatClient.prompt()
                 .system(SYSTEM_PROMPT)
-                .user(message)
+                .messages(history)
                 .tools(websiteGeneratorTool)
                 .call()
                 .content();
+
+        //Assistance
+        history.add(new AssistantMessage(response));
+        return response;
+
     }
 }
